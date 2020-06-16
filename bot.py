@@ -20,7 +20,7 @@ async def compileGarage(username):
     with Image.new('RGBA', (width, height)) as img:
 
         # Pasting lots
-        with Image.open('OtherImports\parking_spots_all.png') as lots:
+        with Image.open('OtherImports/parking_spots_all.png') as lots:
             for i in range(ceil(len(profile["data"]['garage']) / 30)):
                 img.paste(lots, (12, 15 + (291 * i)), lots)
 
@@ -86,7 +86,8 @@ async def garage(ctx, username: str):
         async with ctx.typing():
             await compileGarage(username)
         await ctx.send(file=discord.File("garage.png"))
-    except:
+    except Exception as e:
+        print(e)
         await ctx.send("Error! Could not compile garage.")
 
 
