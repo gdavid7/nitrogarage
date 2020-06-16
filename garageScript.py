@@ -224,10 +224,8 @@ async def userID(session, username):
     #req = requests.get(url = profileLink)
     req = await fetchText(session, profileLink)
     #html_0 = req.text.split('RACER_INFO: ')
-    html_0 = req.split('RACER_INFO: ')
-    html_1 = html_0[1].split(",")
-    html_2 = html_1[0].split(":")
-    return (str(html_2[1]))
+    html = req.split('RACER_INFO: ')[1].split(",")[0].split(":")[1]
+    return str(html)
 
 
 async def get_profile(session, username: str):
@@ -273,25 +271,25 @@ async def getCarAndPaint(session, username):
     else:
         carAndPaintLink = "https://www.nitrotype.com/cars/painted/" + str(
             carID) + "_large_1_" + str(carPaint) + ".png"
-    return (carAndPaintLink)
+    return carAndPaintLink
 
 
 async def compileProfile(username):
     async with aiohttp.ClientSession() as session:
         playerInfo = await get_profile(session, username)
-        return (playerInfo)
+        return playerInfo
 
 
 async def compileBytes(car_id: int, car_hue: int = 0, size: str = 'large'):
     async with aiohttp.ClientSession() as session:
         a = await get_car(session, car_id, car_hue, size)
-        return (a)
+        return a
 
 
 async def compileLink(username):
     async with aiohttp.ClientSession() as session:
         a = await getCarAndPaint(session, username)
-        return (a)
+        return a
 
 
 async def compileProfileAsync(username):
@@ -310,6 +308,6 @@ def findCar(nameString):
     newDict = {}
     carInfo = []
     for x in carsdict:
-        if (nameString.lower() in x.lower()):
+        if nameString.lower() in x.lower():
             newDict[x] = str(carsdict[x])
-    return (newDict)
+    return newDict
