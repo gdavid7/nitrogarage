@@ -19,7 +19,7 @@ async def compileGarage(username):
     height = 30 + (ceil(len(profile["data"]['garage']) / 30) * 291)
     with Image.new('RGBA', (width, height)) as img:
 
-            # Pasting lots
+        # Pasting lots
         with Image.open('OtherImports\parking_spots_all.png') as lots:
             for i in range(ceil(len(profile["data"]['garage']) / 30)):
                 img.paste(lots, (12, 15 + (291 * i)), lots)
@@ -28,11 +28,11 @@ async def compileGarage(username):
         for y, row in enumerate(garage):
             for x, id in enumerate(row):
 
-                    # Skipping blanks
+                # Skipping blanks
                 if not id:
                     continue
 
-                        # Looking for garage car in cars
+                # Looking for garage car in cars
                 id = int(id)
                 car_details = [c for c in profile["data"]['cars'] if c[0] == id and c[1] == 'owned']
                 if not car_details:
@@ -54,18 +54,11 @@ async def compileGarage(username):
             img.save("garage.png", 'PNG')
             b.seek(0)
 
-
 async def carLink(username):
     url = await garageScript.carLink(username)
     return(str(url))
 
-
-
-
-
 bot = commands.Bot(command_prefix=str(data["botPrefix"]), activity = discord.Game(name="$garage [username]"))
-
-
 
 @bot.command()
 async def garage(ctx, username):
@@ -82,6 +75,7 @@ async def garage(ctx, username):
         await ctx.send(file = discord.File("garage.png"))
     except:
         await ctx.send("Error! Could not compile garage.")
+
 @bot.command()
 async def car(ctx, username):
     username = str(username)
