@@ -7,7 +7,7 @@ import json
 from discord.ext import commands
 import discord
 
-with open('config.example.json') as f:
+with open('config.json') as f:
     data = json.load(f)
 token = str(data["discordBotToken"])
 
