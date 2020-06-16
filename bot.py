@@ -1,3 +1,5 @@
+import ast
+
 import garageScript
 from math import ceil, floor
 from PIL import Image
@@ -66,7 +68,7 @@ async def compileGarage(username):
 
 async def carLink(username):
     url = await garageScript.carLink(username)
-    return (str(url))
+    return str(url)
 
 
 bot = commands.Bot(
@@ -75,7 +77,7 @@ bot = commands.Bot(
 
 
 @bot.command()
-async def garage(ctx, username: str):
+async def garage(ctx, *, username: str):
     if ".com" in username:
         usernameList = username.split("/")
         username = usernameList[len(usernameList) - 1]
@@ -91,8 +93,43 @@ async def garage(ctx, username: str):
         await ctx.send("Error! Could not compile garage.")
 
 
+@commands.is_owner()
+@bot.command(name="reload")
+async def reload(ctx: commands.Context):
+    await ctx.send("✅| Rebooting!")
+    await bot.logout()
+
+
+@bot.event
+async def on_ready():
+    bot.owner_ids = data["owner_ids"]
+    print("[BOT] LOGGED IN!")
+
+
+@bot.command(name="stats")
+async def stats(ctx: commands.Context, username: str):
+    if ".com" in username:
+        usernameList = username.split("/")
+        username = usernameList[len(usernameList) - 1]
+    elif '@' in username:
+        username = username.replace("@", "")
+    try:
+        profile = (await garageScript.compileProfileAsync(username))
+        emb = discord.Embed(color=0x64ff00)
+        emb.title = f'{username}\'s stats'
+        emb.add_field(name="title", value=profile["data"]["title"])
+        emb.add_field(name="level", value=profile["data"]["level"])
+        emb.add_field(name="Nitros Used", value=profile["data"]["nitrosUsed"])
+        emb.add_field(name="money", value=profile["data"]["money"])
+        emb.add_field(name="profile views", value=profile["data"]["profileViews"])
+        emb.add_field(name="highest speed", value=profile["data"]["highestSpeed"])
+        await ctx.send(embed=emb)
+    except Exception as e:
+        print(e)
+
+
 @bot.command()
-async def car(ctx, username: str):
+async def car(ctx, *, username: str):
     if ".com" in username:
         usernameList = username.split("/")
         username = usernameList[len(usernameList) - 1]
@@ -106,7 +143,7 @@ async def car(ctx, username: str):
 
 
 @bot.command()
-async def find(ctx, carName: str):
+async def find(ctx, *, carName: str):
     try:
         carDict = garageScript.findCar(carName)
         if len(carDict) <= 0:

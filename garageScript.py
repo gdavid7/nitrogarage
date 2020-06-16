@@ -242,6 +242,19 @@ async def get_profile(session, username: str):
     return j
 
 
+async def get_team(s, tid: int):
+    """
+    gets a team from id
+    :param s:
+    :param tid:
+    :return:
+    """
+    teamlink = f"https://www.nitrotype.com/api/teams/{tid}"
+    m = await fetchText(s, teamlink)
+    j = json.loads(m)
+    return j
+
+
 async def get_car(session, car_id: int, car_hue: int = 0, size: str = 'large'):
     host = 'https://www.nitrotype.com/cars'
 
@@ -280,6 +293,12 @@ async def compileProfile(username):
         return playerInfo
 
 
+async def compileTeam(teamid):
+    async with aiohttp.ClientSession() as s:
+        teamInfo = await get_team(s, teamid)
+        return teamInfo
+
+
 async def compileBytes(car_id: int, car_hue: int = 0, size: str = 'large'):
     async with aiohttp.ClientSession() as session:
         a = await get_car(session, car_id, car_hue, size)
@@ -290,6 +309,10 @@ async def compileLink(username):
     async with aiohttp.ClientSession() as session:
         a = await getCarAndPaint(session, username)
         return a
+
+
+async def compileTeamAsync(teamID):
+    return await compileTeam(teamID)
 
 
 async def compileProfileAsync(username):
