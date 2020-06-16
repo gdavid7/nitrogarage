@@ -4,10 +4,9 @@ from PIL import Image
 from io import BytesIO
 import numpy
 import json
-import aiohttp
-import asyncio
-from discord.ext import tasks, commands
+from discord.ext import commands
 import discord
+
 with open('config.json') as f:
     data = json.load(f)
 token = str(data["discordBotToken"])
@@ -76,12 +75,11 @@ bot = commands.Bot(
 
 
 @bot.command()
-async def garage(ctx, username):
-    username = str(username)
-    if (".com" in username):
+async def garage(ctx, username: str):
+    if ".com" in username:
         usernameList = username.split("/")
         username = usernameList[len(usernameList) - 1]
-    elif ('@' in username):
+    elif '@' in username:
         username = username.replace("@", "")
     try:
         await ctx.send("Compiling garage of " + username)
@@ -93,12 +91,11 @@ async def garage(ctx, username):
 
 
 @bot.command()
-async def car(ctx, username):
-    username = str(username)
-    if (".com" in username):
+async def car(ctx, username: str):
+    if ".com" in username:
         usernameList = username.split("/")
         username = usernameList[len(usernameList) - 1]
-    elif ('@' in username):
+    elif '@' in username:
         username = username.replace("@", "")
     try:
         link = await carLink(username)
@@ -108,11 +105,10 @@ async def car(ctx, username):
 
 
 @bot.command()
-async def find(ctx, carName):
-    carName = str(carName)
+async def find(ctx, carName: str):
     try:
         carDict = garageScript.findCar(carName)
-        if (len(carDict) <= 0):
+        if len(carDict) <= 0:
             await ctx.send("I found no cars matching that name!")
             return
         for x in carDict:
