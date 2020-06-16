@@ -3,3 +3,4 @@ discord
 aiohttp
 requests
 pillow
+numpy
